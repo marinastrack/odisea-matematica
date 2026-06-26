@@ -271,7 +271,7 @@
         </p>
       </div>
 
-      <form id="form-start" onsubmit="startGame(event)" class="space-y-4">
+     <form id="form-start" onsubmit="startGame(event)" class="space-y-4">
         <div>
           <label class="block text-xs uppercase tracking-wider text-cyan-400 font-terminal mb-2">Nombre de la Tripulación / Alumnos</label>
           <input type="text" id="input-team" required placeholder="Ej: Cadete Giménez, Cadete López..." class="w-full bg-slate-950/80 border border-cyan-900/60 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all font-sans">
@@ -285,7 +285,7 @@
           </select>
         </div>
         
-        <button type="submit" onclick="AudioEngine.init();" class="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-terminal font-bold tracking-wider hover:from-cyan-400 hover:to-blue-500 shadow-neon-cyan active:scale-[0.98] transition-all uppercase">
+        <button type="button" onclick="startGame(event)" class="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-slate-950 font-terminal font-bold tracking-wider hover:from-cyan-400 hover:to-blue-500 shadow-neon-cyan active:scale-[0.98] transition-all uppercase">
           Iniciar Secuencia de Despegue
         </button>
       </form>
