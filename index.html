@@ -4,7 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>La Odisea Matemática: Escapa de la Nebulosa</title>
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Orbitron & Inter -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;600;700&family=Orbitron:wght=400;700;900&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
@@ -24,7 +26,7 @@
     }
   </script>
   <style>
-    /* Estilos personalizados para animaciones del espacio */
+    /* Estilos de fondo espacial y efectos visuales */
     @keyframes pulse-slow {
       0%, 100% { opacity: 0.8; transform: scale(1); }
       50% { opacity: 0.5; transform: scale(1.02); }
@@ -48,11 +50,13 @@
 </head>
 <body class="space-bg text-slate-100 h-full flex flex-col justify-between font-sans overflow-x-hidden selection:bg-cyan-500 selection:text-black">
 
+  <!-- Variables de Audio e Inicialización -->
   <script>
+    let isMuted = false;
+
     const AudioEngine = {
       ctx: null,
       
-      // Inicialización forzada por un evento de clic real del usuario
       init() {
         try {
           if (!this.ctx) {
@@ -62,11 +66,10 @@
             this.ctx.resume();
           }
         } catch (e) {
-          console.warn("Web Audio API bloqueada o no soportada:", e);
+          console.warn("Web Audio API bloqueada o no soportada en este navegador:", e);
         }
       },
 
-      // Efecto visual alternativo si el audio físico está bloqueado por políticas del navegador
       triggerVisualFeedback(colorClass) {
         const indicator = document.getElementById("audio-indicator");
         if (indicator) {
@@ -85,8 +88,6 @@
         
         try {
           const now = this.ctx.currentTime;
-          
-          // Oscilador principal: Barrido ascendente espacial
           const osc1 = this.ctx.createOscillator();
           const gain1 = this.ctx.createGain();
           osc1.type = 'sine';
@@ -97,7 +98,6 @@
           gain1.gain.setValueAtTime(0.12, now);
           gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.4);
           
-          // Oscilador secundario armónico (resonancia metálica)
           const osc2 = this.ctx.createOscillator();
           const gain2 = this.ctx.createGain();
           osc2.type = 'triangle';
@@ -110,7 +110,6 @@
           
           osc1.connect(gain1);
           gain1.connect(this.ctx.destination);
-          
           osc2.connect(gain2);
           gain2.connect(this.ctx.destination);
           
@@ -119,7 +118,7 @@
           osc2.start(now);
           osc2.stop(now + 0.38);
         } catch (err) {
-          console.warn("Error al reproducir audio:", err);
+          console.warn("Error al reproducir audio de éxito:", err);
         }
       },
 
@@ -147,7 +146,7 @@
           osc.start(now);
           osc.stop(now + 0.3);
         } catch (err) {
-          console.warn("Error al reproducir audio:", err);
+          console.warn("Error al reproducir audio de error:", err);
         }
       },
 
@@ -174,7 +173,7 @@
           osc.start(now);
           osc.stop(now + 0.06);
         } catch (err) {
-          console.warn("Error al reproducir audio:", err);
+          console.warn("Error al reproducir audio de click:", err);
         }
       },
 
@@ -205,18 +204,14 @@
             osc.stop(now + idx * 0.08 + 0.6);
           });
         } catch (err) {
-          console.warn("Error al reproducir audio:", err);
+          console.warn("Error al reproducir audio de victoria:", err);
         }
       }
     };
-
-    // Desbloqueo pasivo general en cualquier parte del body
-    document.addEventListener('click', () => {
-      AudioEngine.init();
-    }, { once: false });
   </script>
 
-  <section id="screen-cover" class="fixed inset-0 z-50 flex flex-col items-center justify-center text-center bg-black bg-cover bg-center transition-all duration-700" style="background-image: linear-gradient(rgba(2, 6, 23, 0.5), rgba(2, 6, 23, 0.75)), url('portada.png');">
+  <!-- PANTALLA 0: PORTADA CINEMATOGRÁFICA INTERACTIVA -->
+  <section id="screen-cover" class="fixed inset-0 z-50 flex flex-col items-center justify-center text-center bg-black bg-cover bg-center transition-all duration-700" style="background-image: linear-gradient(rgba(2, 6, 23, 0.55), rgba(2, 6, 23, 0.85)), url('portada.png');">
     <div class="glass-panel p-8 md:p-12 mx-4 rounded-3xl border-cyan-500/30 shadow-neon-cyan max-w-xl">
       <span class="text-cyan-400 font-terminal uppercase tracking-[0.25em] text-xs block mb-3 animate-pulse">Sistemas de Navegación Online</span>
       <h1 class="font-terminal text-4xl md:text-5xl text-cyan-400 mb-6 tracking-wider font-black uppercase">LA ODISEA MATEMÁTICA</h1>
@@ -229,6 +224,7 @@
     </div>
   </section>
 
+  <!-- NAVBAR / CABECERA -->
   <header class="w-full border-b border-cyan-950/40 bg-slate-950/60 backdrop-blur-md px-6 py-4 flex flex-wrap justify-between items-center gap-4 z-10 shrink-0">
     <div class="flex items-center gap-3">
       <svg class="w-8 h-8 text-cyan-400 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -256,8 +252,10 @@
     </div>
   </header>
 
+  <!-- CONTENIDO PRINCIPAL -->
   <main class="flex-grow flex items-center justify-center p-4 md:p-8 relative">
     
+    <!-- PANTALLA 1: BIENVENIDA / INGRESO DE DATOS (Oculta al principio, se muestra al entrar de la portada) -->
     <section id="screen-welcome" class="hidden w-full max-w-2xl glass-panel rounded-2xl p-6 md:p-8 shadow-neon-cyan border-cyan-800/40 relative z-10 transition-all duration-500">
       <div class="text-center mb-6">
         <span class="text-cyan-400 font-terminal uppercase tracking-widest text-sm block mb-2">Iniciando protocolo de simulación</span>
@@ -271,7 +269,7 @@
         </p>
       </div>
 
-     <form id="form-start" onsubmit="event.preventDefault(); startGame();" class="space-y-4">
+      <form id="form-start" onsubmit="event.preventDefault(); startGame();" class="space-y-4">
         <div>
           <label class="block text-xs uppercase tracking-wider text-cyan-400 font-terminal mb-2">Nombre de la Tripulación / Alumnos</label>
           <input type="text" id="input-team" required placeholder="Ej: Cadete Giménez, Cadete López..." class="w-full bg-slate-950/80 border border-cyan-900/60 rounded-xl px-4 py-3 text-slate-100 placeholder-slate-600 focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all font-sans">
@@ -294,8 +292,8 @@
       </p>
     </section>
 
+    <!-- PANTALLA JUEGO: EL CENTRO DE CONTROL -->
     <section id="screen-game" class="hidden w-full max-w-6xl grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10 transition-all duration-500">
-      
       <div class="lg:col-span-7 flex flex-col gap-4">
         <div class="glass-panel border-cyan-800/30 rounded-2xl p-5 flex flex-col justify-between min-h-[350px] md:min-h-[450px]">
           <div class="flex justify-between items-center border-b border-slate-800 pb-3">
@@ -307,6 +305,7 @@
           </div>
 
           <div class="flex-grow flex items-center justify-center py-6" id="canvas-container">
+            <!-- Nivel 1 SVG -->
             <svg id="svg-level-1" class="w-full max-w-[400px] h-auto" viewBox="0 0 400 250" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="80" cy="125" r="30" fill="#1e1b4b" stroke="#06b6d4" stroke-width="2" stroke-dasharray="4 2"/>
               <text x="80" y="130" fill="#22d3ee" font-family="Orbitron" font-size="10" text-anchor="middle">NEBULOSA</text>
@@ -319,6 +318,7 @@
               <text x="200" y="230" fill="#06b6d4" font-family="Orbitron" font-size="12" text-anchor="middle">En pantalla = 6 cm</text>
             </svg>
 
+            <!-- Nivel 2 SVG -->
             <svg id="svg-level-2" class="hidden w-full max-w-[400px] h-auto" viewBox="0 0 400 250" fill="none" xmlns="http://www.w3.org/2000/svg">
               <line x1="30" y1="60" x2="370" y2="60" stroke="#06b6d4" stroke-width="3" class="opacity-75"/>
               <line x1="30" y1="125" x2="370" y2="125" stroke="#06b6d4" stroke-width="3" class="opacity-75"/>
@@ -338,6 +338,7 @@
               <text x="255" y="158" fill="#d8b4fe" font-family="sans-serif" font-size="11" font-weight="bold" text-anchor="middle">X</text>
             </svg>
 
+            <!-- Nivel 3 SVG -->
             <svg id="svg-level-3" class="hidden w-full max-w-[400px] h-auto" viewBox="0 0 400 250" fill="none" xmlns="http://www.w3.org/2000/svg">
               <line x1="20" y1="210" x2="380" y2="210" stroke="#475569" stroke-width="2"/>
               <circle cx="340" cy="50" r="15" fill="#f59e0b" class="animate-pulse"/>
@@ -355,6 +356,7 @@
               <text x="200" y="235" fill="#64748b" font-family="sans-serif" font-size="10" text-anchor="middle">Sombra Total: 14 m</text>
             </svg>
 
+            <!-- Nivel 4 SVG -->
             <svg id="svg-level-4" class="hidden w-full max-w-[400px] h-auto" viewBox="0 0 400 250" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M 80,200 L 320,200 L 320,80 Z" stroke="#3b82f6" stroke-width="3" fill="#1e3a8a" fill-opacity="0.2"/>
               <path d="M 305,200 L 305,185 L 320,185" stroke="#3b82f6" stroke-width="1.5"/>
@@ -378,6 +380,7 @@
         </div>
       </div>
 
+      <!-- LADO DERECHO: CONSOLA DE ENIGMAS -->
       <div class="lg:col-span-5 flex flex-col gap-4">
         <div class="glass-panel border-cyan-800/30 rounded-2xl p-6 flex flex-col justify-between h-full shadow-neon-cyan" id="control-panel">
           <div>
@@ -385,7 +388,6 @@
               <span class="font-terminal text-xs tracking-widest text-slate-400 uppercase" id="current-stage-title">PASO 1 DE 4</span>
               <span class="h-2 w-2 rounded-full bg-emerald-500" id="status-dot"></span>
             </div>
-
             <h3 class="text-xl font-bold font-terminal text-cyan-400 mb-3" id="puzzle-title">Calibración de Escalas</h3>
             <p class="text-slate-300 text-sm leading-relaxed mb-5 text-justify" id="puzzle-desc">
               El mapa de navegación espacial está mal escalado. El sensor indica que la distancia real entre la Nebulosa y la estación orbital más cercana es de 450 años luz (AL), pero en nuestra pantalla holográfica esa distancia se representa con apenas 6 cm.
@@ -400,5 +402,378 @@
             </div>
 
             <div class="flex items-center gap-2">
-              <button onclick="AudioEngine.init(); AudioEngine.playClick(); toggleHint()" class="px-3 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-cyan-500 rounded-lg text-xs text-cyan-400 font-terminal transition-all flex items-center gap-1.5 shrink-0">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 .364l-.707 .707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0
+              <button type="button" onclick="AudioEngine.init(); AudioEngine.playClick(); toggleHint()" class="px-3 py-2 bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-cyan-500 rounded-lg text-xs text-cyan-400 font-terminal transition-all flex items-center gap-1.5 shrink-0">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 .364l-.707 .707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                Pista
+              </button>
+              <div class="flex-grow">
+                <input type="number" id="input-answer" placeholder="Ingresá el valor numérico" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-slate-100 placeholder-slate-700 text-center font-terminal focus:outline-none focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 transition-all">
+              </div>
+            </div>
+
+            <div id="feedback-panel" class="hidden p-3 rounded-lg text-xs text-center font-semibold transition-all">
+              <span id="feedback-message"></span>
+            </div>
+
+            <button type="button" onclick="AudioEngine.init(); submitAnswer()" class="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-slate-950 font-terminal font-bold uppercase tracking-wider rounded-lg shadow-neon-green hover:from-emerald-400 hover:to-teal-500 active:scale-[0.98] transition-all">
+              Comprobar Código de Acceso
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PANTALLA FIN: ÉXITO -->
+    <section id="screen-victory" class="hidden w-full max-w-2xl glass-panel rounded-2xl p-6 md:p-8 shadow-neon-green border-emerald-500/30 text-center relative z-10 transition-all duration-500">
+      <div class="w-20 h-20 bg-emerald-500/10 border border-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-neon-green">
+        <svg class="w-10 h-10 text-emerald-400 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </div>
+
+      <h2 class="text-3xl font-black font-terminal text-emerald-400 tracking-wider mb-2">¡SISTEMAS REACTIVADOS!</h2>
+      <p class="text-slate-300 text-sm md:text-base mb-6">
+        La trayectoria espacial se ha corregido con éxito. El hipermotor de la nave ha encendido sin problemas, propulsándolos fuera de la Nebulosa. ¡Han demostrado un dominio absoluto de la geometría espacial y la trigonometría!
+      </p>
+
+      <div class="bg-slate-950/90 border border-emerald-800/40 rounded-xl p-5 mb-6 text-left font-mono text-xs space-y-3">
+        <div class="flex justify-between border-b border-emerald-950/80 pb-2">
+          <span class="text-emerald-500 font-bold font-terminal uppercase tracking-widest">CERTIFICADO DE ESCAPE</span>
+          <span class="text-slate-500">REF: MATH-E-ROOM</span>
+        </div>
+        <div class="grid grid-cols-3 gap-y-2">
+          <span class="text-slate-500">Tripulación:</span>
+          <span class="col-span-2 text-slate-200" id="cert-team">--</span>
+          
+          <span class="text-slate-500">Tiempo usado:</span>
+          <span class="col-span-2 text-slate-200" id="cert-time">--</span>
+
+          <span class="text-slate-500">Errores cometidos:</span>
+          <span class="col-span-2 text-slate-200" id="cert-errors">0</span>
+          
+          <span class="text-slate-500">Estado de Misión:</span>
+          <span class="col-span-2 text-emerald-400 font-bold uppercase tracking-wider">Aprobado / Fuera de Peligro</span>
+        </div>
+        <div class="border-t border-emerald-950/80 pt-3 flex flex-col gap-1">
+          <span class="text-slate-500 block">Código Único de Verificación (para profesor):</span>
+          <div class="flex gap-2">
+            <input type="text" readonly id="cert-hash" class="w-full bg-slate-900 border border-emerald-950 rounded px-2.5 py-1 text-emerald-300 font-mono text-center select-all">
+            <button onclick="AudioEngine.init(); copyHash()" class="px-3 py-1 bg-emerald-600 text-black font-bold rounded hover:bg-emerald-500 transition-all">Copiar</button>
+          </div>
+        </div>
+      </div>
+
+      <button onclick="AudioEngine.init(); AudioEngine.playClick(); resetGame()" class="py-2.5 px-6 border border-slate-700 hover:border-cyan-500 rounded-xl text-slate-400 hover:text-cyan-300 transition-all font-terminal text-sm">
+        Iniciar Nueva Simulación
+      </button>
+    </section>
+
+    <!-- PANTALLA FIN: DERROTA -->
+    <section id="screen-defeat" class="hidden w-full max-w-xl glass-panel rounded-2xl p-6 md:p-8 shadow-neon-red border-rose-500/30 text-center relative z-10 transition-all duration-500">
+      <div class="w-20 h-20 bg-rose-500/10 border border-rose-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-neon-red">
+        <svg class="w-10 h-10 text-rose-400 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+        </svg>
+      </div>
+
+      <h2 class="text-3xl font-black font-terminal text-rose-400 tracking-wider mb-2">SOPORTE VITAL AGOTADO</h2>
+      <p class="text-slate-300 text-sm mb-6">
+        Se agotó el tiempo de simulación y la nave ha quedado atrapada indefinidamente en el núcleo gravitacional de la nebulosa. ¡No se preocupen! La práctica hace al maestro de la geometría.
+      </p>
+
+      <button onclick="AudioEngine.init(); AudioEngine.playClick(); resetGame()" class="py-3 px-8 bg-gradient-to-r from-rose-500 to-red-600 text-slate-950 font-terminal font-bold tracking-wider rounded-xl shadow-neon-red hover:from-rose-400 hover:to-red-500 active:scale-[0.98] transition-all">
+        Reiniciar Protocolo
+      </button>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="w-full text-center py-4 bg-slate-950/40 border-t border-slate-900/60 text-[10px] text-slate-500 uppercase tracking-widest shrink-0 z-10">
+    Desarrollado para la Evaluación de Geometría y Trigonometría en Secundaria
+  </footer>
+
+  <!-- LÓGICA DE JUEGO -->
+  <script>
+    let currentStage = 1;
+    let timer = null;
+    let secondsLeft = 0;
+    let initialSeconds = 0;
+    let teamName = "";
+    let totalErrors = 0;
+
+    const puzzles = {
+      1: {
+        title: "Calibración de Escalas",
+        tag: "ESCALAS Y PROPORCIONES",
+        desc: "El mapa estelar digital de la pantalla principal está fuera de escala. El sensor indica que la distancia real entre la Nebulosa y la estación orbital más cercana es de 450 años luz (AL), pero en nuestra pantalla holográfica esa distancia se representa con apenas 6 cm.<br><br>Si el planeta seguro se encuentra a una distancia real de 1200 años luz en este mismo mapa estelar, ¿cuántos centímetros medirá en nuestra pantalla para calibrar la navegación?",
+        hint: "Pensá en la escala del mapa: si 450 años luz reales se dibujan usando exactamente 6 centímetros, ¿cuántos años luz reales representa cada centímetro individual en la pantalla? Utilizá esa misma equivalencia (la constante de proporcionalidad) para calcular los centímetros necesarios para 1200 años luz.",
+        answer: 16,
+        log: "Cargando mapa estelar... calibrando factor de correlación planetaria."
+      },
+      2: {
+        title: "Teorema de Tales",
+        tag: "TEOREMA DE TALES",
+        desc: "Los tres láseres de posicionamiento horizontales son líneas paralelas perfectas. Dos transversales los cortan. Un lado tiene los sectores de longitud A = 12 u y B = 18 u.<br><br>En la transversal del lado opuesto, el sector correspondiente al de 12 mide 8 u. ¿Cuál debe ser el valor exacto del sector de acople rápido (X) para que los láseres no se desvíen?",
+        hint: "El Teorema de Tales nos dice que las razones entre segmentos correspondientes deben ser iguales. Observá con atención cómo se relaciona el segmento original de 12 con el nuevo de 8 (¿por qué factor se redujo?). Aplicá exactamente esa misma relación o proporción al segmento de 18 para encontrar el valor de X.",
+        answer: 12,
+        log: "Analizando alineación de láseres... Anomalía del Teorema de Tales detectada."
+      },
+      3: {
+        title: "Triángulos Semejantes",
+        tag: "SEMEJANZA DE TRIÁNGULOS",
+        desc: "Un pilar de soporte de la nave de 3 metros de altura proyecta una sombra de 2 metros sobre la plataforma externa. Al mismo tiempo, el gigantesco generador cuántico principal proyecta una sombra total de 14 metros debido a la radiación solar.<br><br>Sabiendo que ambos elementos forman triángulos semejantes con la inclinación de la luz solar, ¿cuál es la altura real en metros del generador cuántico?",
+        hint: "En dos triángulos semejantes, las proporciones entre sus lados homólogos se mantienen constantes. Compará las sombras: ¿cuántas veces más grande es la sombra del generador (14 m) con respecto a la del pilar (2 m)? Ese valor es tu 'factor de escala'. Multiplicá la altura del pilar por ese mismo factor.",
+        answer: 21,
+        log: "Comprobando vectores de sombra solar... Ajustando módulo de energía cuántica."
+      },
+      4: {
+        title: "Ángulo de Elevación de Rampa",
+        tag: "TRIGONOMETRÍA (SOHCAHTOA)",
+        desc: "Para lanzar la cápsula de escape de regreso a la Tierra, la rampa de lanzamiento extensible (que tiene una longitud fija de 20 metros) debe alzarse hasta tocar la escotilla que se encuentra exactamente a 10 metros de altura vertical.<br><br>¿Cuál debe ser el valor del ángulo de elevación (α) de la rampa para dar el salto? Utilizá las identidades de SOHCAHTOA para calcular el ángulo en grados.",
+        hint: "Identificá qué lados del triángulo rectángulo tenés respecto al ángulo α: el largo de la rampa representa la hipotenusa (20 m) y la altura requerida está justo en frente del ángulo, es decir, es el cateto opuesto (10 m). ¿Cuál de las tres razones de SOH-CAH-TOA vincula el opuesto con la hipotenusa? Buscá qué ángulo agudo cumple con esa razón.",
+        answer: 30,
+        log: "Configurando plataforma de eyección... Computando ángulo crítico de lanzamiento."
+      }
+    };
+
+    // FUNCIÓN DE TRANSICIÓN: Oculta la portada y activa la sección de nombres
+    function enterGame() {
+      // Desbloqueamos el audio gracias a la interacción física
+      AudioEngine.init();
+      AudioEngine.playClick();
+      
+      // Ocultar la portada con desvanecimiento táctico
+      const cover = document.getElementById("screen-cover");
+      if (cover) {
+        cover.classList.add("opacity-0", "pointer-events-none");
+        setTimeout(() => {
+          cover.classList.add("hidden");
+        }, 700);
+      }
+      
+      // Mostrar la pantalla de registro de nombres
+      const welcome = document.getElementById("screen-welcome");
+      if (welcome) {
+        welcome.classList.remove("hidden");
+      }
+    }
+
+    // Iniciar el juego (validando el nombre de usuario previamente)
+    function startGame() {
+      AudioEngine.init();
+      AudioEngine.playClick();
+      
+      teamName = document.getElementById("input-team").value.trim() || "Tripulación";
+      const selectedMinutes = parseInt(document.getElementById("select-time").value);
+      
+      initialSeconds = selectedMinutes * 60;
+      secondsLeft = initialSeconds;
+
+      document.getElementById("screen-welcome").classList.add("hidden");
+      document.getElementById("screen-game").classList.remove("hidden");
+      document.getElementById("panel-timer").classList.remove("hidden");
+      document.getElementById("audio-indicator").classList.remove("hidden");
+
+      currentStage = 1;
+      totalErrors = 0;
+      loadStage(currentStage);
+      startTimer();
+    }
+
+    function loadStage(stage) {
+      const data = puzzles[stage];
+      
+      document.getElementById("anomaly-id").innerText = `MONITOR: ANOMALÍA 0${stage}`;
+      document.getElementById("anomaly-tag").innerText = data.tag;
+      document.getElementById("current-stage-title").innerText = `PASO ${stage} DE 4`;
+      document.getElementById("puzzle-title").innerText = data.title;
+      document.getElementById("puzzle-desc").innerHTML = data.desc;
+      document.getElementById("hint-text").innerText = data.hint;
+      document.getElementById("log-text").innerText = data.log;
+      
+      document.getElementById("input-answer").value = "";
+      hideFeedback();
+      hideHint();
+
+      for (let i = 1; i <= 4; i++) {
+        document.getElementById(`svg-level-${i}`).classList.add("hidden");
+      }
+      document.getElementById(`svg-level-${stage}`).classList.remove("hidden");
+    }
+
+    function startTimer() {
+      if (timer) clearInterval(timer);
+      
+      updateTimerUI();
+      timer = setInterval(() => {
+        secondsLeft--;
+        updateTimerUI();
+
+        if (secondsLeft <= 0) {
+          clearInterval(timer);
+          endGame(false);
+        }
+      }, 1000);
+    }
+
+    function updateTimerUI() {
+      const min = Math.floor(secondsLeft / 60);
+      const sec = secondsLeft % 60;
+      const formatted = `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+      
+      const el = document.getElementById("timer-display");
+      el.innerText = formatted;
+
+      if (secondsLeft < 120) {
+        el.className = "font-terminal font-bold text-lg text-rose-500 tracking-widest animate-pulse";
+      } else if (secondsLeft < 300) {
+        el.className = "font-terminal font-bold text-lg text-amber-500 tracking-widest";
+      } else {
+        el.className = "font-terminal font-bold text-lg text-rose-400 tracking-widest";
+      }
+    }
+
+    function submitAnswer() {
+      AudioEngine.init();
+      
+      const inputVal = parseFloat(document.getElementById("input-answer").value);
+      const correctAnswer = puzzles[currentStage].answer;
+
+      if (isNaN(inputVal)) {
+        showFeedback("Por favor, ingresá un número.", "error");
+        AudioEngine.playError();
+        return;
+      }
+
+      if (inputVal === correctAnswer) {
+        AudioEngine.playSuccess();
+        showFeedback("¡ACCIÓN COMPLETA! Sistemas restablecidos.", "success");
+        
+        setTimeout(() => {
+          if (currentStage < 4) {
+            currentStage++;
+            loadStage(currentStage);
+          } else {
+            clearInterval(timer);
+            endGame(true);
+          }
+        }, 1200);
+
+      } else {
+        AudioEngine.playError();
+        totalErrors++;
+        showFeedback("SISTEMA BLOQUEADO. El código matemático introducido no coincide.", "error");
+      }
+    }
+
+    function showFeedback(msg, type) {
+      const panel = document.getElementById("feedback-panel");
+      const text = document.getElementById("feedback-message");
+      panel.classList.remove("hidden");
+      
+      if (type === "success") {
+        panel.className = "p-3 rounded-lg text-xs text-center font-semibold bg-emerald-950/80 text-emerald-400 border border-emerald-500/50";
+      } else {
+        panel.className = "p-3 rounded-lg text-xs text-center font-semibold bg-rose-950/80 text-rose-400 border border-rose-500/50";
+      }
+      text.innerText = msg;
+    }
+
+    function hideFeedback() {
+      document.getElementById("feedback-panel").classList.add("hidden");
+    }
+
+    function toggleHint() {
+      const hint = document.getElementById("hint-box");
+      if (hint.classList.contains("hidden")) {
+        hint.classList.remove("hidden");
+      } else {
+        hint.classList.add("hidden");
+      }
+    }
+
+    function hideHint() {
+      document.getElementById("hint-box").classList.add("hidden");
+    }
+
+    function endGame(isVictory) {
+      document.getElementById("screen-game").classList.add("hidden");
+      document.getElementById("panel-timer").classList.add("hidden");
+
+      if (isVictory) {
+        AudioEngine.playVictory();
+        document.getElementById("screen-victory").classList.remove("hidden");
+        
+        document.getElementById("cert-team").innerText = teamName;
+        
+        const timeUsed = initialSeconds - secondsLeft;
+        const minUsed = Math.floor(timeUsed / 60);
+        const secUsed = timeUsed % 60;
+        document.getElementById("cert-time").innerText = `${minUsed} min ${secUsed} seg`;
+        document.getElementById("cert-errors").innerText = totalErrors;
+
+        const safeName = unescape(encodeURIComponent(teamName));
+        const securityHash = btoa(`${safeName}|${timeUsed}|${totalErrors}|escape2026`).substring(0, 16);
+        document.getElementById("cert-hash").value = securityHash;
+
+      } else {
+        AudioEngine.playError();
+        document.getElementById("screen-defeat").classList.remove("hidden");
+      }
+    }
+
+    function copyHash() {
+      const hashInput = document.getElementById("cert-hash");
+      hashInput.select();
+      hashInput.setSelectionRange(0, 99999);
+      
+      try {
+        document.execCommand('copy');
+        showFeedback("Código de verificación copiado al portapapeles", "success");
+        setTimeout(() => hideFeedback(), 2000);
+      } catch (err) {
+        console.error("Fallo al copiar", err);
+      }
+    }
+
+    function resetGame() {
+      clearInterval(timer);
+      document.getElementById("screen-victory").classList.add("hidden");
+      document.getElementById("screen-defeat").classList.add("hidden");
+      
+      // Reiniciar visibilidad limpia regresando a la portada
+      const cover = document.getElementById("screen-cover");
+      if (cover) {
+        cover.classList.remove("hidden", "opacity-0", "pointer-events-none");
+      }
+      
+      document.getElementById("input-team").value = "";
+    }
+
+    function toggleMute() {
+      isMuted = !isMuted;
+      const btn = document.getElementById("mute-btn");
+      const indicator = document.getElementById("audio-indicator");
+      
+      if (isMuted) {
+        btn.innerHTML = `
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"></path>
+          </svg>
+        `;
+        if (indicator) indicator.innerText = "📡 ACÚSTICA: SILENCIADO";
+      } else {
+        btn.innerHTML = `
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+          </svg>
+        `;
+        if (indicator) indicator.innerText = "📡 ACÚSTICA: ACTIVA";
+        AudioEngine.init();
+      }
+    }
+  </script>
+</body>
+</html>
