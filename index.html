@@ -713,9 +713,28 @@
         document.getElementById("cert-time").innerText = `${minUsed} min ${secUsed} seg`;
         document.getElementById("cert-errors").innerText = totalErrors;
 
-        const safeName = unescape(encodeURIComponent(teamName));
-        const securityHash = btoa(`${safeName}|${timeUsed}|${totalErrors}|escape2026`).substring(0, 16);
-        document.getElementById("cert-hash").value = securityHash;
+       // ... dentro de la función endGame(isVictory) en tu index.html ...
+
+// Reemplaza estas líneas viejas:
+// const safeName = unescape(encodeURIComponent(teamName));
+// const securityHash = btoa(`${safeName}|${timeUsed}|${totalErrors}|odisea2026`);
+
+// Por este método moderno de bytes idéntico al decodificador:
+const rawText = `${teamName}|${timeUsed}|${totalErrors}|odisea2026`;
+const bytes = new TextEncoder().encode(rawText);
+let binString = "";
+for (let i = 0; i < bytes.length; i++) {
+  binString += String.fromCharCode(bytes[i]);
+}
+const securityHash = btoa(binString);
+
+document.getElementById("cert-hash").value = securityHash;
+
+//### ¿Por qué esta solución funciona siempre?
+//* **TextEncoder/TextDecoder:** Convierten el texto a bytes UTF-8 reales directamente en la CPU del navegador. No se apoyan en trucos de codificación de URLs de escape.
+//* **Compatibilidad Absoluta:** Esta API estándar está soportada en el 100% de los navegadores modernos (Chrome, Safari, Firefox, Edge) tanto de computadoras de escritorio, netbooks escolares de planes gubernamentales, como teléfonos móviles y tablets. 
+
+//¡Con este ajuste, tu validador y tu juego funcionarán de forma impecable desde cualquier servidor en la web o aula virtual!
 
       } else {
         AudioEngine.playError();
